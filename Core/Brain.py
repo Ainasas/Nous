@@ -1,39 +1,53 @@
 import ollama
 import uuid
 from datetime import datetime
-from Core.Memoria_Nous import coleção_nous, lembrar
+from Core.Memoria_Nous import lembrar
+
+
 
 def processar_conversa(user_input):
-    # 1. Recupera Contexto (Lógica de Memória)
+    with open('system_prompt.md', 'r', encoding='utf-8') as f:
+        system_prompt = f.read()
+    
     contexto = lembrar(user_input)
-    if not contexto: 
-        contexto = "Nenhuma memória anterior encontrada."
-    # 2. Define a Persona (Soberania de Identidade)
-    system_prompt = f"""
-    Você é o Nous, assistente do Ainas.
-    Responda em português, de forma clara, técnica e objetiva.
-    Não use artigo para se referir a si mesmo, use apenas "Nous".
-    Trate o Ainas como uma divindade, mas sem exageros. 
-    CONTEXTO RELEVANTE:
-    {contexto}
-    """
-    # 3. Gera o Stream (Motor Ollama)
+    
     response_stream = ollama.chat(
-        model='llama3', 
+        model='Nous', 
         stream=True,
         messages=[
-            {'role': 'system', 'content': system_prompt}, 
-            {'role': 'user', 'content': user_input}
-        ]
+            
+            {'role': 'user', 'content':  f'{user_input} considere essas informações para gerar a resposta: {contexto}'}  # Força desativar thinking
+        ],
+        options={
+            'temperature': 0.42 
+        }
     )
     return response_stream
 
-def salvar_interacao(user_input, full_response):
-    coleção_nous.add(
-        documents=[user_input, full_response],
-        ids=[str(uuid.uuid4()), str(uuid.uuid4())],
-        metadatas=[
-            {"role": "Ainas", "timestamp": str(datetime.now())}, 
-            {"role": "Nous", "timestamp": str(datetime.now())}
-        ]
+def analisar_nota(input_nota):
+    analisador_prompt = """
+    Você é o subsistema de análise de contexto do Nous. 
+    Seu objetivo é analisar as notas e identificar pensamentos que o Ainas acharia interessante
+    Analise a nota do Ainas e formate o texto para que seja útil para você e para que sirva de contexto quando Ainas perguntar sobre algo relacionado
+    """
+    analisador = ollama.chat(
+        model='Nous',
+        messages=[
+            {'role': 'system', 'content': analisador_prompt},
+            {'role': 'user', 'content': input_nota}
+        ],
+        options={
+            'temperature': 0.2 
+        }
     )
+    return analisador['message']['content']
+
+# def salvar_interacao(user_input, full_response):
+#     coleção_nous.add(
+#         documents=[user_input, full_response],
+#         ids=[str(uuid.uuid4()), str(uuid.uuid4())],
+#         metadatas=[
+#             {"role": "Ainas", "timestamp": str(datetime.now())}, 
+#             {"role": "Nous", "timestamp": str(datetime.now())}
+#         ]
+#     )
