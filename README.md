@@ -17,11 +17,10 @@ No Projeto Nous, meu objetivo era pegar um LLM rodando localmente e ir integrand
 
 ## Funcionalidades Atuais:
 - Chat com memória = Antes de qualquer resposta, Nous decide se precisa de contexto anterior e se sim dá uma query no banco de dados vetorial do ChromaDB
-- Ativação por voz = Por padrão Nous fica desativado e só responde caso o seu script ouça uma palavra de ativação que atualmente é "Nous"
 - Resposta por som e texto = Ao falar com Nous ele responderá por voz utilizando TTS e por texto como num chat
 - Detecção de mudança no meu centro de documentos (Obsidian) e integração automatica do documento para o banco de dados = utilizando a biblioteca Watchdog, Nous detecta mudanças em arquivos de texto em uma pasta de minha escolha (Meu Vault do Obsidian) e integra essas mudanças dentro do seu banco de dados
 - Pesquisa na Web através do DuckDuckGo = Nous pode pesquisar informações na internet caso ele não saiba a resposta ou caso for pedido
-
+- Aleatoriedade = Ao inicializar o script base, são gerados horarios aleatorios no dia que ativam funções especificas no Nous. Algumas funções: Curiosidade_aleatoria, Analisar_tela_atual, Lembrar_tarefa
 
 ### Tecnologias utilizadas
 - Ollama
