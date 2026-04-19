@@ -16,7 +16,6 @@ No Projeto Nous, meu objetivo era pegar um LLM rodando localmente e ir integrand
 *Esse projeto está em constante construção.*
 
 ## Funcionalidades Atuais:
-- Chamada por API = Para facilitar a implementação em GUI e outras ferramentas disponibilizei o Nous dentro de uma API
 - Chat com memória = Antes de qualquer resposta, Nous decide se precisa de contexto anterior e se sim dá uma query no banco de dados vetorial do ChromaDB
 - Ativação por voz = Por padrão Nous fica desativado e só responde caso o seu script ouça uma palavra de ativação que atualmente é "Nous"
 - Resposta por som e texto = Ao falar com Nous ele responderá por voz utilizando TTS e por texto como num chat
@@ -25,7 +24,6 @@ No Projeto Nous, meu objetivo era pegar um LLM rodando localmente e ir integrand
 
 
 ### Tecnologias utilizadas
-- FastAPI
 - Ollama
 - ChromaDB
 - Piper TTS
