@@ -1,33 +1,43 @@
 # 🧠 Nous
+
 <p align="left">
-<img src="https://img.shields.io/badge/Estado-Em%20constru%C3%A7%C3%A3o-%237B1FA2" alt="Estado">
-<img src="https://img.shields.io/badge/Python-3.10+-blue.svg" alt="Python">
-<img src="https://img.shields.io/badge/Local-LLM-green" alt="LLM">
+  <img src="https://img.shields.io/badge/Status-Em%20construção-%23BA7517" alt="Status">
+  <img src="https://img.shields.io/badge/Python-3.10+-blue.svg" alt="Python">
+  <img src="https://img.shields.io/badge/LLM-Local-green" alt="LLM Local">
+  <img src="https://img.shields.io/badge/Ollama%20·%20ChromaDB%20·%20Piper%20TTS-purple" alt="Stack">
 </p>
 
-Nous é um assistente pessoal criado para rodar localmente. O objetivo é integrar um modelo LLM a diversas ferramentas de automação, permitindo que ele possua contexto sobre meus documentos pessoais e interaja de forma agradavel.
+Nous é um assistente pessoal que roda inteiramente de forma local. O projeto conecta um modelo LLM a ferramentas de automação, permitindo contexto sobre documentos pessoais, resposta por voz e uma pitada de personalidade.
 
-Status: O projeto está em desenvolvimento ativo e constante evolução.
+> **Nota:** Este projeto está em evolução constante. Novas funcionalidades são adicionadas regularmente.
 
+---
 
-## Objetivo
-No Projeto Nous, meu objetivo era pegar um LLM rodando localmente e ir integrando funções o suficientes para que possa se tornar uma ferramenta de assistencia (Com um pouco de personalidade)
+## Sobre o projeto
 
-*Esse projeto está em constante construção.*
+A ideia central é simples: pegar um LLM local e ir adicionando integrações até que ele se torne uma ferramenta de assistência real — não apenas um chatbot genérico, mas algo com contexto, autonomia e jeito próprio.
 
-## Funcionalidades Atuais:
-- Chat com memória = Antes de qualquer resposta, Nous decide se precisa de contexto anterior e se sim dá uma query no banco de dados vetorial do ChromaDB
-- Resposta por som e texto = Ao falar com Nous ele responderá por voz utilizando TTS e por texto como num chat
-- Detecção de mudança no meu centro de documentos (Obsidian) e integração automatica do documento para o banco de dados = utilizando a biblioteca Watchdog, Nous detecta mudanças em arquivos de texto em uma pasta de minha escolha (Meu Vault do Obsidian) e integra essas mudanças dentro do seu banco de dados
-- Pesquisa na Web através do DuckDuckGo = Nous pode pesquisar informações na internet caso ele não saiba a resposta ou caso for pedido
-- Aleatoriedade = Ao inicializar o script base, são gerados horarios aleatorios no dia que ativam funções especificas no Nous. Algumas funções: Curiosidade_aleatoria, Analisar_tela_atual, Lembrar_tarefa
+---
 
-### Tecnologias utilizadas
-- Ollama
-- ChromaDB
-- Piper TTS
+## Funcionalidades
 
-### Como rodar
-1 - Crie um ambiente virtual e instale os requisitos contidos no Requisitos.txt
-2 - Atualmente o Nous não possui interface grafica, ele pode ser chamado para conversa usando "python conversa.py" no terminal
-3 - Ative o script "python main.py" para habilitar as funções de chamar o Nous por voz e para que seja possivel a detecção de alterações em documentos
+### ✅ Disponíveis agora
+
+- **Resposta por voz e texto** — Nous responde falado (via TTS) e por texto simultaneamente, como um chat com áudio
+- **Análise de notas pessoais** — A pedido, Nous itera sobre minhas notas, analisa cada uma e armazena no banco vetorial para uso como contexto futuro
+
+### 🚧 Em desenvolvimento
+
+- **Memória de conversa** — Antes de responder, Nous decide se precisa de contexto anterior e consulta o ChromaDB automaticamente
+- **Pesquisa na web** — Integração com DuckDuckGo para buscar informações quando não souber a resposta ou quando solicitado
+- **Aleatoriedade autônoma** — Ao iniciar, horários aleatórios são gerados para disparar funções espontâneas: `curiosidade_aleatoria`, `analisar_tela_atual`, `lembrar_tarefa`
+
+---
+
+## Tecnologias
+
+| Componente | Tecnologia |
+|---|---|
+| Modelo local | [Ollama](https://ollama.com) |
+| Memória vetorial | [ChromaDB](https://www.trychroma.com) |
+| Síntese de voz | [Piper TTS](https://github.com/rhasspy/piper) |
