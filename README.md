@@ -10,6 +10,9 @@
 Nous é um assistente pessoal que roda inteiramente de forma local. O projeto conecta um modelo LLM a ferramentas de automação, permitindo contexto sobre documentos pessoais, resposta por voz e uma pitada de personalidade.
 
 > **Nota:** Este projeto está em evolução constante. Novas funcionalidades são adicionadas regularmente.
+>
+> <img width="3837" height="1918" alt="image" src="https://github.com/user-attachments/assets/d84f1753-0e0c-4914-a786-74aea570bc91" />
+
 
 ---
 
@@ -26,11 +29,11 @@ A ideia central é simples: pegar um LLM local e ir adicionando integrações at
 - **Resposta por voz e texto** — Nous responde falado (via TTS) e por texto simultaneamente, como um chat com áudio
 - **Análise de notas pessoais** — A pedido, Nous itera sobre minhas notas, analisa cada uma e armazena no banco vetorial para uso como contexto futuro
 - **Chamada de ferramenta** - Nous é capaz de chamar ferramentas, como marcar eventos no calendário
+- **Pesquisa na web** — Integração com DuckDuckGo para buscar informações quando não souber a resposta ou quando solicitado
 
 ### 🚧 Em desenvolvimento
 
 - **Memória de conversa** — Antes de responder, Nous decide se precisa de contexto anterior e consulta o ChromaDB automaticamente
-- **Pesquisa na web** — Integração com DuckDuckGo para buscar informações quando não souber a resposta ou quando solicitado
 - **Aleatoriedade autônoma** — Ao iniciar, horários aleatórios são gerados para disparar funções espontâneas: `curiosidade_aleatoria`, `analisar_tela_atual`, `lembrar_tarefa`
 
 ---
