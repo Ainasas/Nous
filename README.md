@@ -10,6 +10,9 @@
 Nous é um assistente pessoal que roda inteiramente de forma local. O projeto conecta um modelo LLM a ferramentas de automação, permitindo contexto sobre documentos pessoais, resposta por voz e uma pitada de personalidade.
 
 > **Nota:** Este projeto está em evolução constante. Novas funcionalidades são adicionadas regularmente.
+>
+> <img width="3837" height="1918" alt="image" src="https://github.com/user-attachments/assets/d84f1753-0e0c-4914-a786-74aea570bc91" />
+
 
 ---
 
