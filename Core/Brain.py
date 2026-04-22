@@ -4,6 +4,7 @@ from datetime import datetime
 from Core.Memoria_Nous import lembrar, colecao_notas, colecao_chat
 from agenda import criar_evento
 from Core.auth import autenticar_g
+from ferramentas_gerais import pesquisar_web
 
 hoje = datetime.now()
 
@@ -25,6 +26,20 @@ ferramentas_nous = [
       },
     },
   },
+  {
+        'type': 'function',
+        'function': {
+            'name': 'pesquisar_web',
+            'description': 'Pesquisa informações em tempo real na internet quando você não souber a resposta ou precisar de dados atuais.',
+            'parameters': {
+                'type': 'object',
+                'properties': {
+                    'query': {'type': 'string', 'description': 'O termo de busca otimizado para motores de pesquisa'}
+                },
+                'required': ['query'],
+            },
+        },
+    },
 ]
 
 def processar_conversa(user_input):
@@ -33,29 +48,42 @@ def processar_conversa(user_input):
     with open('tool_prompt.md', 'r', encoding='utf-8') as f:
         tool_prompt = f.read()
 
+    mensagens = [
+        {'role': 'system', 'content': f'{tool_prompt} \n Dia atual: {hoje}'},
+        {'role': 'user', 'content': f"Ainas: {user_input}"}
+    ]
+
     response = ollama.chat(
         model='qwen3:8b-q4_K_M', 
-        messages=[
-            {'role': 'system', 'content': f'{tool_prompt} \n Dia atual: {hoje}'},
-            {'role': 'user', 'content': f"Ainas: {user_input}"}
-        ],
+        messages=mensagens,
         options={'temperature': 0.1},
         tools=ferramentas_nous 
     )
     
-    # 2. Verificar se o modelo quer chamar uma ferramenta
+    # 1. Verifica se houve Tool Call
     if response.get('message', {}).get('tool_calls'):
         for call in response['message']['tool_calls']:
             nome_funcao = call['function']['name']
-            argumentos = call['function']['arguments'] # JSON
+            argumentos = call['function']['arguments']
             
-            print(f"DEBUG: Executando ferramenta: {nome_funcao}")
-            
+            # Executa a ferramenta escolhida
             if nome_funcao == "criar_evento":
-                resultado = criar_evento(service, argumentos)
-                return f"Evento criado com sucesso! Detalhes: {resultado.get('htmlLink')}"
+                resultado_ferramenta = criar_evento(service, argumentos)
+            elif nome_funcao == "pesquisar_web":
+                resultado_ferramenta = pesquisar_web(argumentos)
+            
+            mensagens.append(response['message']) 
+            mensagens.append({
+                'role': 'tool', 
+                'content': str(resultado_ferramenta), 
+                'name': nome_funcao
+            })
+
+            
+            final_response = ollama.chat(model='qwen3:8b-q4_K_M', messages=mensagens)
+            return final_response['message']['content']
     
-    return response['message']['content'] # Retorna a fala do modelo se não houver tool call
+    return response['message']['content']
             
 
     
@@ -118,6 +146,7 @@ def execute_tool_calling(model_output):
         # 3. Lógica de roteamento das funções
         if tool_name == "criar_evento":
             return criar_evento(service, parameters)
+        
         else:
             return f"Ferramenta '{tool_name}' não reconhecida."
 
