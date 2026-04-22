@@ -25,6 +25,7 @@ A ideia central é simples: pegar um LLM local e ir adicionando integrações at
 
 - **Resposta por voz e texto** — Nous responde falado (via TTS) e por texto simultaneamente, como um chat com áudio
 - **Análise de notas pessoais** — A pedido, Nous itera sobre minhas notas, analisa cada uma e armazena no banco vetorial para uso como contexto futuro
+- **Chamada de ferramenta** - Nous é capaz de chamar ferramentas, como marcar eventos no calendário
 
 ### 🚧 Em desenvolvimento
 
