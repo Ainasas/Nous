@@ -1,4 +1,6 @@
 from ddgs import DDGS
+from Core.Memoria_Nous import colecao_ainas
+import datetime, uuid
 
 def pesquisar_web(parametros):
     """
@@ -39,3 +41,6 @@ def pesquisar_web(parametros):
     except Exception as e:
         print(f"ERRO NA BUSCA: {e}")
         return f"Desculpe, houve um erro técnico ao acessar a busca: {str(e)}"
+
+
+    

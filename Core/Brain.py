@@ -4,7 +4,7 @@ from datetime import datetime
 from Core.Memoria_Nous import lembrar, colecao_notas, colecao_chat
 from agenda import criar_evento
 from Core.auth import autenticar_g
-from ferramentas_gerais import pesquisar_web
+from ferramentas_gerais import pesquisar_web, copiar
 
 hoje = datetime.now()
 
@@ -44,12 +44,13 @@ ferramentas_nous = [
 
 def processar_conversa(user_input):
     service = autenticar_g() 
+    contexto = lembrar(user_input)
     
     with open('tool_prompt.md', 'r', encoding='utf-8') as f:
         tool_prompt = f.read()
 
     mensagens = [
-        {'role': 'system', 'content': f'{tool_prompt} \n Dia atual: {hoje}'},
+        {'role': 'system', 'content': f'{tool_prompt}\nDia atual: {hoje}\n\nContexto relevante de conversas anteriores:\n{contexto}'},
         {'role': 'user', 'content': f"Ainas: {user_input}"}
     ]
 
@@ -83,6 +84,14 @@ def processar_conversa(user_input):
             final_response = ollama.chat(model='qwen3:8b-q4_K_M', messages=mensagens)
             return final_response['message']['content']
     
+    colecao_chat.add(
+    documents=[user_input, response['message']['content']],
+    ids=[str(uuid.uuid4()), str(uuid.uuid4())],
+    metadatas=[
+        {"role": "Ainas", "timestamp": str(datetime.now())},
+        {"role": "Nous", "timestamp": str(datetime.now())}
+    ]
+)
     return response['message']['content']
             
 
