@@ -1,37 +1,77 @@
 import ollama
-import uuid
+import uuid, json, re
 from datetime import datetime
-from Core.Memoria_Nous import lembrar
+from Core.Memoria_Nous import lembrar, colecao_notas, colecao_chat
+from agenda import criar_evento
+from Core.auth import autenticar_g
 
+hoje = datetime.now()
 
+ferramentas_nous = [
+  {
+    'type': 'function',
+    'function': {
+      'name': 'criar_evento',
+      'description': 'Cria um novo evento na agenda do Google Calendar',
+      'parameters': {
+        'type': 'object',
+        'properties': {
+          'resumo': {'type': 'string', 'description': 'O título do evento'},
+          'inicio': {'type': 'datetime', 'description': 'Data e hora de início em formato ISO (ex: 2026-04-21T10:00:00-03:00)'},
+          'fim': {'type': 'datetime', 'description': 'Data e hora de término em formato ISO'},
+          'descricao': {'type': 'string', 'description': 'Detalhes opcionais do evento'}
+        },
+        'required': ['resumo', 'inicio', 'fim'],
+      },
+    },
+  },
+]
 
 def processar_conversa(user_input):
-    with open('system_prompt.md', 'r', encoding='utf-8') as f:
-        system_prompt = f.read()
+    service = autenticar_g() 
     
-    contexto = lembrar(user_input)
-    
-    response_stream = ollama.chat(
-        model='Nous', 
-        stream=True,
+    with open('tool_prompt.md', 'r', encoding='utf-8') as f:
+        tool_prompt = f.read()
+
+    response = ollama.chat(
+        model='qwen3:8b-q4_K_M', 
         messages=[
-            
-            {'role': 'user', 'content':  f'{user_input} considere essas informações para gerar a resposta: {contexto}'}  # Força desativar thinking
+            {'role': 'system', 'content': f'{tool_prompt} \n Dia atual: {hoje}'},
+            {'role': 'user', 'content': f"Ainas: {user_input}"}
         ],
-        options={
-            'temperature': 0.42 
-        }
+        options={'temperature': 0.1},
+        tools=ferramentas_nous 
     )
-    return response_stream
+    
+    # 2. Verificar se o modelo quer chamar uma ferramenta
+    if response.get('message', {}).get('tool_calls'):
+        for call in response['message']['tool_calls']:
+            nome_funcao = call['function']['name']
+            argumentos = call['function']['arguments'] # JSON
+            
+            print(f"DEBUG: Executando ferramenta: {nome_funcao}")
+            
+            if nome_funcao == "criar_evento":
+                resultado = criar_evento(service, argumentos)
+                return f"Evento criado com sucesso! Detalhes: {resultado.get('htmlLink')}"
+    
+    return response['message']['content'] # Retorna a fala do modelo se não houver tool call
+            
+
+    
 
 def analisar_nota(input_nota):
-    analisador_prompt = """
+    
+    with open('system_prompt.md', 'r', encoding='utf-8') as f:
+        system_prompt = f.read()
+    analisador_prompt = f"""
+    {system_prompt}
     Você é o subsistema de análise de contexto do Nous. 
     Seu objetivo é analisar as notas e identificar pensamentos que o Ainas acharia interessante
     Analise a nota do Ainas e formate o texto para que seja útil para você e para que sirva de contexto quando Ainas perguntar sobre algo relacionado
     """
     analisador = ollama.chat(
-        model='Nous',
+        model='llama3.1:8b',
         messages=[
             {'role': 'system', 'content': analisador_prompt},
             {'role': 'user', 'content': input_nota}
@@ -51,3 +91,37 @@ def analisar_nota(input_nota):
 #             {"role": "Nous", "timestamp": str(datetime.now())}
 #         ]
 #     )
+
+def execute_tool_calling(model_output):
+    """
+    Extrai o JSON da resposta do modelo e simula a execução da ferramenta.
+    """
+    service = autenticar_g() 
+
+    try:
+        # 1. Usar Regex para encontrar o conteúdo entre chaves { }
+        # Isso protege o código caso o modelo escreva algo como "Aqui está o JSON: { ... }"
+        json_match = re.search(r'\{.*\}', model_output, re.DOTALL)
+        
+        if not json_match:
+            print("Erro: Nenhum formato JSON encontrado na resposta.")
+            return None
+
+        json_string = json_match.group(0)
+        
+        # 2. Converter string para dicionário Python
+        tool_data = json.loads(json_string)
+        
+        tool_name = tool_data.get("tool")
+        parameters = tool_data.get("parameters", {})
+
+        # 3. Lógica de roteamento das funções
+        if tool_name == "criar_evento":
+            return criar_evento(service, parameters)
+        else:
+            return f"Ferramenta '{tool_name}' não reconhecida."
+
+    except json.JSONDecodeError as e:
+        return f"Erro ao processar JSON: {e}"
+    except Exception as e:
+        return f"Erro inesperado: {e}"

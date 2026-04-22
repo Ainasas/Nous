@@ -15,13 +15,10 @@ def chat():
             stream = processar_conversa(user_input)
             content = ''
 
-            print('\n\nNous:\n', end='', flush=True)
-            for chunk in stream:
-                if chunk.message.content:
-                    print(chunk.message.content, end='', flush=True)
-                    content += chunk.message.content
+            print(f'\n\nNous: {stream}\n', end='', flush=True)
+            
                     
-            criar_audio(content)
+            # criar_audio(stream)
 
         except Exception as e:
             print(f"\n[ERRO DE SISTEMA]: {e}")
