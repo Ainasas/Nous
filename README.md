@@ -4,16 +4,16 @@ O **Nous** é um assistente digital que construí para gerir as minhas tarefas p
 
 ---
 
-## 🚀 O que o Nous faz por mim?
+## O que o Nous faz por mim?
 
-### 📩 Triagem Inteligente de E-mails
+### Triagem Inteligente de E-mails
 O Nous lê a minha caixa de entrada do Gmail e decide sozinho o que é importante:
 * **Recrutamento:** Identifica e-mails sobre propostas de emprego e entrevistas.
 * **Ações Automáticas:** Se um recrutador pede uma entrevista, o Nous prepara um rascunho de resposta profissional.
 * **Hub de Feedback:** Regista automaticamente todos os feedbacks (positivos ou negativos).
 * **Limpeza:** Ignora newsletters e spam, poupando o meu tempo de foco.
 
-### 📅 Gestão de Agenda
+### Gestão de Agenda
 Consigo marcar compromissos apenas falando com o Nous. Ele converte minhas conversas em eventos direto no **Google Calendar**.
 
 ## Como foi construído?
