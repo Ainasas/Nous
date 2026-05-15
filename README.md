@@ -1,6 +1,7 @@
 # 🧠 Nous: Assistente Pessoal
 
 O **Nous** é um assistente digital que construí para gerir as minhas tarefas profissionais de forma inteligente e privada. Em vez de apenas responder a perguntas, o Nous "pensa" através de fluxos de trabalho para organizar o meu e-mail e a minha agenda sem que eu precise de intervir manualmente.
+<img width="3722" height="1512" alt="image" src="https://github.com/user-attachments/assets/77b455bf-69f9-4ffa-9506-7b1233947199" />
 
 ---
 
